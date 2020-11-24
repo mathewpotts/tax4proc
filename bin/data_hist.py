@@ -13,7 +13,7 @@ ROOT.gROOT.LoadMacro("{0}/hybrid/qualct.C".format(tax4proc_bin))
 
 def read_in_args():
     parser = argparse.ArgumentParser(description = 'Concatinate data files (optional) and plot the data energy histogram.')
-    parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4/all)',required=True)
+    parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4)',required=True)
     parser.add_argument('-concat',action='store_true',help='Use this flag if you want to concatinate all the data files into a single file.',default=False)
     args = parser.parse_args()
     concat=args.concat
@@ -24,9 +24,6 @@ def read_in_args():
     if det == 'brtax4':
         fd      = 'TAX4_BLACK_ROCK'
         fd_path = os.environ['BRTAX4_DATA_PASS5']
-    if det == 'all':
-        fd = ['TAX4_MIDDLE_DRUM','TAX4_BLACK_ROCK']
-        fd_path = [os.environ['MDTAX4_DATA_PASS5'],os.environ['BRTAX4_DATA_PASS5']]
     return concat,fd,fd_path,det
 
 def concat_dst(fd,fd_path,date,det):

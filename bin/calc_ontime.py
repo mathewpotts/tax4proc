@@ -3,9 +3,11 @@
 # Read in a list of ASCII ontime files for MD/BR TAx4 and output total ontime for each  mirror and total ontime for the detector. 
 
 # Import libs
+import ROOT
 import os
 import glob
 import sys
+import numpy as np
 import argparse
 
 def read_in_ascii_list():
@@ -96,14 +98,55 @@ if __name__=='__main__':
     # Remove gw time from end of filelist
     filelist = [file for file in filelist if not isfloat(file)]
 
+    # List varibles for the TGraph to be filled in for loop
+    date_ontime_list = []
+
     # Open each file and calculate the ontime for each mirror 
     for file in filelist:
-        #print(file)
+        date = file[-32:-28]+file[-27:-25]+file[-24:-22]
+        part = int(file[-20:-18])
         tmp_mirror_ontime,tmp_ontime=calc_ontime(file,det)
         total_ontime+=tmp_ontime
+
+        # Form a list of date and ontime for that day
+        if date == '20190625' and part == 1:
+            date_ontime=total_ontime
+        elif date != '20190625' and part == 1:
+            date_ontime=total_ontime
+            date_ontime_list.append([int(date)-1,(total_ontime - tmp_ontime)/3600])
+        elif date == '20200924' and part == 18:
+            date_ontime_list.append([int(date),total_ontime/3600])
+        elif date != '20200924' and part != 1:
+            date_ontime += tmp_ontime
+        
         gw_ontime+=is_gw(file,det)*tmp_ontime
         for mirror in range(0,max):
             total_mirror_ontime[mirror]+=tmp_mirror_ontime[mirror]
+
+    # Drawing TGraph of ontime per day
+    x = np.array(date_ontime_list).T[0]
+    tmp = []
+    for i in x:
+        yr = int(i / 10000)
+        mn = int(i / 100 % 100)
+        d  = int(i % 100)
+        tmp.append(ROOT.TDatime(yr,mn,d,0,0,0).Convert() - ROOT.TDatime(1995,1,1,0,0,0).Convert())
+    floatx = np.array(tmp,dtype=np.float32) 
+    y = np.array(date_ontime_list).T[1]
+    floaty = np.array(y,dtype=np.float32)
+    ontime_per_day = ROOT.TGraph(int(len(date_ontime_list)),floatx,floaty)
+    ontime_per_day.GetXaxis().SetTimeDisplay(1)
+    ontime_per_day.GetXaxis().SetTimeFormat("%Y/%m/%d")
+    ontime_per_day.GetXaxis().SetLabelSize(0.02)
+    ontime_per_day.SetMarkerStyle(20)
+    ontime_per_day.SetMarkerSize(0.5)
+    ontime_per_day.Draw("apl")
+    
+
+    # Prompt exit
+    print('\nPress enter to continue.\n')
+    os.system('read gonext')
+    
     if det == 'mdtax4':
         mirror_dict={0:'m25',1:'m26',2:'m27',3:'m28'}
         for mirror in range(0,len(total_mirror_ontime)):
