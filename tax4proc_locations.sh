@@ -8,7 +8,7 @@ export TAX4PROC_BIN=$TAX4PROC/bin
 export PATH=$TAX4PROC_BIN:$PATH
 
 # Export data directories
-DATA_ROOT_DIR=$HOME/data
+export DATA_ROOT_DIR=$HOME/data
 export BRTAX4_DATA_ROOT=$DATA_ROOT_DIR/brtax4
 export BRTAX4_DATA_RAW=$DATA_ROOT_DIR/brtax4/raw
 export BRTAX4_DATA_PASS5=$DATA_ROOT_DIR/brtax4/pass5/data

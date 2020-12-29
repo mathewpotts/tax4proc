@@ -63,18 +63,18 @@ def ngmpe(taTree1,taTree2,det):
       
         # Loop over all possible  mirror instances
         for j in taTree1.stpln.mir_ngtube:
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18:
-                n_gmir += 1
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=18.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.0:
-                n_gmir18 += 1
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=19.0 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.5:
-                n_gmir185 += 1
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=19.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>19.0:
-                n_gmir19 += 1
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=20.0 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>19.5:
-                n_gmir195 += 1
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=20.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>20.0:
-                n_gmir20 += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18:
+	        n_gmir += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=18.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.0:
+	        n_gmir18 += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=19.0 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.5:
+	        n_gmir185 += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=19.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>19.0:
+	        n_gmir19 += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=20.0 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>19.5:
+	        n_gmir195 += 1
+	    if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))<=20.5 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>20.0:
+	        n_gmir20 += 1
 
         hngmpedata.Fill(n_gmir)
         hngmpedata18.Fill(n_gmir18)
@@ -111,18 +111,18 @@ def ngmpe(taTree1,taTree2,det):
       
         # Loop over all possible  mirror instances
         for j in taTree2.stpln.mir_ngtube:
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18:
-                n_gmir += 1
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=18.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.0:
-                n_gmir18 += 1
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=19.0 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.5:
-                n_gmir185 += 1
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=19.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>19.0:
-                n_gmir19 += 1
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=20.0 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>19.5:
-                n_gmir195 += 1
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=20.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>20.0:
-                n_gmir20 += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18:
+	        n_gmir += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=18.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.0:
+	        n_gmir18 += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=19.0 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.5:
+	        n_gmir185 += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=19.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>19.0:
+	        n_gmir19 += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=20.0 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>19.5:
+	        n_gmir195 += 1
+	    if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))<=20.5 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>20.0:
+	        n_gmir20 += 1
 
         hngmpemc.Fill(n_gmir,ROOT.weight(np.log10(taTree2.mc04.energy)))
         hngmpemc18.Fill(n_gmir18,ROOT.weight(np.log10(taTree2.mc04.energy)))
@@ -192,7 +192,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ##########
@@ -212,7 +211,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe18.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe18.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe_18-185.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ##########
@@ -232,7 +230,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe185.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe185.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe_185-19.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ##########
@@ -252,7 +249,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe19.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe19.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe_19-195.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ##########
@@ -272,7 +268,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe195.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe195.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe_195-20.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ##########
@@ -292,7 +287,6 @@ def ngmpe(taTree1,taTree2,det):
     legend.Draw()
     rpngmpe20.GetLowerRefGraph().Fit("pol1","W","",0,2.5)
     ROOT.gPad.Update()
-    rpngmpe20.SaveAs('{0}/{1}/plots/data-mc-compare/ngmpe_20-205.png'.format(os.environ['DATA_ROOT_DIR'],det))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
 
@@ -439,7 +433,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s.Draw()
     legend.Draw()
     rp.GetLowerRefGraph().Fit("pol1","W")
-    rp.SaveAs('{0}/{1}/data-mc-compare/{2}.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################
@@ -458,7 +451,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s18.Draw()
     legend.Draw()
     rp18.GetLowerRefGraph().Fit("pol1","W")
-    rp18.SaveAs('{0}/{1}/data-mc-compare/{2}_18-185.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################
@@ -477,7 +469,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s185.Draw()
     legend.Draw()
     rp185.GetLowerRefGraph().Fit("pol1","W")
-    rp185.SaveAs('{0}/{1}/data-mc-compare/{2}_185-19.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################
@@ -496,7 +487,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s19.Draw()
     legend.Draw()
     rp19.GetLowerRefGraph().Fit("pol1","W")
-    rp19.SaveAs('{0}/{1}/data-mc-compare/{2}_19-195.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################
@@ -515,7 +505,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s195.Draw()
     legend.Draw()
     rp195.GetLowerRefGraph().Fit("pol1","W")
-    rp195.SaveAs('{0}/{1}/data-mc-compare/{2}_195-20.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################
@@ -534,7 +523,6 @@ def data_mc_compare(taTree1,taTree2,plot):
     s20.Draw()
     legend.Draw()
     rp20.GetLowerRefGraph().Fit("pol1","W")
-    rp20.SaveAs('{0}/{1}/data-mc-compare/{2}_20-205.png'.format(os.environ['DATA_ROOT_DIR'],det,plot))
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     ###########################

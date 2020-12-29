@@ -156,9 +156,9 @@ if __name__=='__main__':
     ontime_per_day   = ROOT.TGraph(int(len(date_ontime_list)),floatx,floaty)
     gwtime_per_day   = ROOT.TGraph(int(len(gw_ontime_list)),floatx,floaty2)
     if det == 'mdtax4':
-        daily_bin = 516
+        daily_bin = 525
     if det == 'brtax4':
-        daily_bin = 397
+        daily_bin = 406
     by_day_ontime    = ROOT.TH1F('by_day_ontime','by_day_ontime',daily_bin,floatx[0],floatx[-1])
     by_gw_day_ontime = ROOT.TH1F('by_gw_day_ontime','by_gw_day_ontime',daily_bin,floatx[0],floatx[-1])
     for i,date in enumerate(floatx):
@@ -180,10 +180,10 @@ if __name__=='__main__':
     gwtime_per_day.SetLineColor(2)
     gwtime_per_day.Draw("pl")
     by_day_ontime.SetFillColor(38)
-    #by_day_ontime.Draw('same,hist')
+    by_day_ontime.Draw('same,hist')
     by_gw_day_ontime.SetFillColor(2)
-    #by_gw_day_ontime.Draw('same,hist')
-    #ROOT.gPad.SetLogy()
+    by_gw_day_ontime.Draw('same,hist')
+    ROOT.gPad.SetLogy()
     ROOT.gPad.SaveAs("{0}/plots/ontime_per_day.png".format(os.environ['{0}_DATA_ROOT'.format(det.upper())]))
     
 

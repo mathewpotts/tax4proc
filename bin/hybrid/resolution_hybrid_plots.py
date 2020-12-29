@@ -181,7 +181,7 @@ def prof_declare(det_id):
     ROOT.gInterpreter.Declare(rp_df)
 
 def find_last_date(det):
-    file = os.popen('ls -drt /home/glados/Data_Storage_2/{0}/mc/[0-9][0-9]* | sort -n | tail -n1'.format(det)).read()
+    file = os.popen('ls -drt {0}/[0-9][0-9]* | sort -n | tail -n1'.format(os.environ['MDTAX4_MC_ROOT'])).read()
     date = file[-9:-1]
     return date
 
@@ -191,9 +191,9 @@ if __name__=='__main__':
     det,plot,det_id = read_in_args()
     last_date = find_last_date(det)
     if det == 'mdtax4':
-        filename = '/home/glados/Data_Storage_2/hybrid/hybrid_mc/hybrid_mc.all.cut.root'
+        filename = '{0}/mc/hybrid_mc.all.cut.root'.format(os.environ['MDTAX4_HYBRID_ROOT'])
     elif det == 'brtax4':
-        filename = '/home/glados/Data_Storage_2/hybrid/hybrid_mc/brtax4/hybrid_mc.all.cut.root'
+        filename = '{0}/mc/hybrid_mc.all.cut.root'.format(os.environ['BRTAX4_HYBRID_ROOT'])
     else:
         exit(1)
         

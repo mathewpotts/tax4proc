@@ -1,6 +1,6 @@
 void plot_hybrid_evts_per_day(){
 
-  TFile *f2 = new TFile("/media/glados/Data_Storage_2/hybrid/tmatch/pass5/hybrid_190625_200924.tlhbgeomnp.root","r");
+  TFile *f2 = new TFile("/home/potts/data/hyb_mdtax4/pass5/hybrid_190625_201207.tlhbgeomnp.root","r");
   TTree *taTree = (TTree*)f2->Get("taTree");
 
   talex00_class *talex00 = new talex00_class;
@@ -13,10 +13,10 @@ void plot_hybrid_evts_per_day(){
   TDatime X1(2019,6,25,0,0,0);
   auto T1 = X1.Convert()-T0;
   
-  TDatime X2(2020,10,30,0,0,0);
+  TDatime X2(2020,12,30,0,0,0);
   auto T2 = X2.Convert(1)-T0;
 
-  auto h1 = new TH1F("h1","test",235,T1,T2);
+  auto h1 = new TH1F("h1","test",17,T1,T2);
 
   Int_t nentries=taTree->GetEntries();
   Int_t date;
