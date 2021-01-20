@@ -13,10 +13,10 @@ void plot_hybrid_evts_per_day(){
   TDatime X1(2019,6,25,0,0,0);
   auto T1 = X1.Convert()-T0;
   
-  TDatime X2(2020,12,30,0,0,0);
+  TDatime X2(2020,12,31,0,0,0);
   auto T2 = X2.Convert(1)-T0;
 
-  auto h1 = new TH1F("h1","test",17,T1,T2);
+  auto h1 = new TH1F("h1","test",500,T1,T2);
 
   Int_t nentries=taTree->GetEntries();
   Int_t date;

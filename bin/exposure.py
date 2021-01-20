@@ -21,8 +21,18 @@ def read_in_args():
     return det,fd_path
 
 def get_ontime(det,fd_path):
-    filename = '{0}/ontime_list_{1}.txt'.format(tax4proc_path,det)
-    os.system('readlink -f {0}/ontime/[0-9][0-9]*/*[0-9][0-9][0-9]* > {1}'.format(fd_path,filename))
+    filename    = '{0}/ontime_list_{1}.txt'.format(tax4proc_path,det)
+    ontime_list = os.popen('readlink -f {0}/ontime/[0-9][0-9]*/*[0-9][0-9][0-9]*'.format(fd_path)).read().split('\n')
+    del ontime_list[-1]
+    for otf in ontime_list:
+        if otf[-42:-18] == '20190625/y2019m06d25p001':
+            #print(otf)
+            os.system('readlink -f {0} > {1}'.format(otf,filename))
+        elif int(otf[-42:-34]) >= 20190625:
+            #print(otf)
+            os.system('readlink -f {0} >> {1}'.format(otf,filename))
+        else:
+            continue
     os.system('{0}/calc_ontime.py -i {1} -det {2}'.format(tax4proc_bin_path,filename,det))
     with open(filename,'r') as f:
         lines = f.readlines()

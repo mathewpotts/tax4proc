@@ -63,13 +63,13 @@ def plot_resolution(taTree,plot,fd_path,det_id):
             prof_titles = ';log_{10}(E_{THROWN}/eV);#theta_{RECON} - #theta_{THROWN}'
             hist_draw   = '57.296*hctim->mthe[int(etrack->udata[0])]-mc04->theta*57.296'
         
-    c18  = ROOT.TCanvas("c{0}18".format(plot),"c{0}18".format(plot),600,600)
+    #c18  = ROOT.TCanvas("c{0}18".format(plot),"c{0}18".format(plot),600,600)
     c185 = ROOT.TCanvas("c{0}185".format(plot),"c{0}185".format(plot),600,600)
     c19  = ROOT.TCanvas("c{0}19".format(plot),"c{0}19".format(plot),600,600)
     c195 = ROOT.TCanvas("c{0}195".format(plot),"c{0}195".format(plot),600,600)
     c20  = ROOT.TCanvas("c{0}20".format(plot),"c{0}20".format(plot),600,600)
 
-    h18  = ROOT.TH1F("h{0}18".format(plot),"18.0 < log_{10}(E_{RECON}/eV) <= 18.5;%s}"%(hist_title),100,neg_hist_range,hist_range)
+    #h18  = ROOT.TH1F("h{0}18".format(plot),"18.0 < log_{10}(E_{RECON}/eV) <= 18.5;%s}"%(hist_title),100,neg_hist_range,hist_range)
     h185 = ROOT.TH1F("h{0}185".format(plot),"18.5 < log_{10}(E_{RECON}/eV) <= 19.0;%s"%(hist_title),100,neg_hist_range,hist_range)
     h19  = ROOT.TH1F("h{0}19".format(plot),"19.0 < log_{10}(E_{RECON}/eV) <= 19.5;%s"%(hist_title),100,neg_hist_range,hist_range)
     h195 = ROOT.TH1F("h{0}195".format(plot),"19.5 < log_{10}(E_{RECON}/eV) <= 20.0;%s"%(hist_title),100,neg_hist_range,hist_range)
@@ -77,34 +77,34 @@ def plot_resolution(taTree,plot,fd_path,det_id):
 
     ROOT.gStyle.SetOptFit(1)
     
-    c18.cd()
-    taTree.Draw("{0}>>h{1}18".format(hist_draw,plot),"etrack.qualct==1 && log10((missing_E_corr(prfc.eng[etrack.udata[0]])))>18.0 && log10((missing_E_corr(prfc.eng[etrack.udata[0]])))<=18.5")
-    h18.Fit("gaus")
-    h18.GetFunction("gaus").SetLineColor(kRed)
-    h18.GetFunction("gaus").SetLineWidth(3)
-    c18.Update()
-    c18.SaveAs("{0}/plots/resolution/{1}_resolution_hist_18.png".format(fd_path,plot))
+    #c18.cd()
+    #taTree.Draw("{0}>>h{1}18".format(hist_draw,plot),"etrack.qualct==1 && log10((missing_E_corr(prfc.eng[etrack.udata[0]])))>18.0 && log10((missing_E_corr(prfc.eng[etrack.udata[0]])))<=18.5 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20")
+    #h18.Fit("gaus")
+    #h18.GetFunction("gaus").SetLineColor(kRed)
+    #h18.GetFunction("gaus").SetLineWidth(3)
+    #c18.Update()
+    #c18.SaveAs("{0}/plots/resolution/{1}_resolution_hist_18.png".format(fd_path,plot))
 
     c185.cd()
-    taTree.Draw("{0}>>h{1}185".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>18.5 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=19.0")
+    taTree.Draw("{0}>>h{1}185".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>18.5 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=19.0 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20")
     h185.Fit("gaus");h185.GetFunction("gaus").SetLineColor(kRed);h185.GetFunction("gaus").SetLineWidth(3)
     c185.Update()
     c185.SaveAs("{0}/plots/resolution/{1}_resolution_hist_185.png".format(fd_path,plot))
 
     c19.cd()
-    taTree.Draw("{0}>>h{1}19".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>19 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=19.5")
+    taTree.Draw("{0}>>h{1}19".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>19 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=19.5 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20")
     h19.Fit("gaus");h19.GetFunction("gaus").SetLineColor(kRed);h19.GetFunction("gaus").SetLineWidth(3)
     c19.Update()
     c19.SaveAs("{0}/plots/resolution/{1}_resolution_hist_19.png".format(fd_path,plot))
 
     c195.cd()
-    taTree.Draw("{0}>>h{1}195".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>19.5 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=20")
+    taTree.Draw("{0}>>h{1}195".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>19.5 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=20 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20")
     h195.Fit("gaus");h195.GetFunction("gaus").SetLineColor(kRed);h195.GetFunction("gaus").SetLineWidth(3)
     c195.Update()
     c195.SaveAs("{0}/plots/resolution/{1}_resolution_hist_195.png".format(fd_path,plot))
 
     c20.cd()
-    taTree.Draw("{0}>>h{1}20".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>20 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=20.5")
+    taTree.Draw("{0}>>h{1}20".format(hist_draw,plot),"etrack->qualct==1 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>20 && log10((missing_E_corr(prfc->eng[etrack->udata[0]])))<=20.5 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20")
     h20.Fit("gaus");h20.GetFunction("gaus").SetLineColor(kRed);h20.GetFunction("gaus").SetLineWidth(3)
     c20.Update()
     c20.SaveAs("{0}/plots/resolution/{1}_resolution_hist_20.png".format(fd_path,plot))
@@ -117,8 +117,8 @@ def prof_declare(det_id):
     TProfile *profe = new TProfile("profe",";log_{10}(E_THROWN}/eV);ln(E_{RECON}/E_{THROWN})",30,18.0,20.5);
     TH2F *hebox = new TH2F("hebox",";log_{10}(E_{thrown}/eV);ln(E_{RECON}/E_{THROWN})",50,17,21,100,-1,1);
     ceprof->cd();
-    taTree->Draw("(log((missing_E_corr(prfc->eng[etrack->udata[0]]))/mc04->energy)):log10(mc04->energy)>>hebox","etrack->qualct==1","colz");
-    taTree->Draw("(log((missing_E_corr(prfc->eng[etrack->udata[0]]))/mc04->energy)):log10(mc04->energy)>>profe","etrack->qualct==1","prof same");
+    taTree->Draw("(log((missing_E_corr(prfc->eng[etrack->udata[0]]))/mc04->energy)):log10(mc04->energy)>>hebox","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","colz");
+    taTree->Draw("(log((missing_E_corr(prfc->eng[etrack->udata[0]]))/mc04->energy)):log10(mc04->energy)>>profe","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","prof same");
     
     profe->SetLineColor(kRed);
     profe->SetLineWidth(2);
@@ -134,8 +134,8 @@ def prof_declare(det_id):
     TProfile *profpsi = new TProfile("profpsi",";log_{10}(E_{RECON}/eV);#psi_{RECON} - #psi_{THROWN}",40,18.0,20.5);
     TH2F *hpsibox = new TH2F("hpsibox",";log_{10}(E_{RECON}/eV);#psi_{RECON} - #psi_{THROWN}",50,17,21,100,-40,40);
     cpsiprof->cd();
-    taTree->Draw("57.296*hctim->mpsi[int(etrack->udata[0])]-mc04->psi[%d]*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hpsibox","etrack->qualct==1","colz");
-    taTree->Draw("57.296*hctim->mpsi[int(etrack->udata[0])]-mc04->psi[%d]*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profpsi","etrack->qualct==1","profs sames");
+    taTree->Draw("57.296*hctim->mpsi[int(etrack->udata[0])]-mc04->psi[%d]*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hpsibox","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","colz");
+    taTree->Draw("57.296*hctim->mpsi[int(etrack->udata[0])]-mc04->psi[%d]*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profpsi","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","profs sames");
     
     profpsi->SetLineColor(kRed);
     profpsi->SetLineWidth(2);
@@ -151,8 +151,8 @@ def prof_declare(det_id):
     TProfile *profThe = new TProfile("profThe",";log_{10}(E_{THROWN}/eV);#theta_{RECON} - #theta_{THROWN}",40,18.0,20.5);
     TH2F *hThebox = new TH2F("hThebox",";log_{10}(E_{THROWN}/eV);#theta_{RECON} - #theta_{THROWN}",50,17,21,100,-40,40);
     ctheprof->cd();
-    taTree->Draw("57.296*hctim->mthe[int(etrack->udata[0])]-mc04->theta*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hThebox","etrack->qualct==1","colz");
-    taTree->Draw("57.296*hctim->mthe[int(etrack->udata[0])]-mc04->theta*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profThe","etrack->qualct==1","profs same");
+    taTree->Draw("57.296*hctim->mthe[int(etrack->udata[0])]-mc04->theta*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hThebox","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","colz");
+    taTree->Draw("57.296*hctim->mthe[int(etrack->udata[0])]-mc04->theta*57.296:log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profThe","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","profs same");
     
     profThe->SetLineColor(kRed);
     profThe->SetLineWidth(2);
@@ -168,8 +168,8 @@ def prof_declare(det_id):
     TProfile *profRp = new TProfile("profRp",";log_{10}(E_{RECON}/eV);ln(Rp_{RECON} - Rp_{THROWN})",40,18.0,20.5);
     TH2F *hRpbox = new TH2F("hRpbox",";log_{10}(E_{RECON}/eV);ln(Rp_{RECON} / Rp_{THROWN})",50,17,21,40,-1,1);
     crpprof->cd();
-    taTree->Draw("log(hctim->mrp[int(etrack->udata[0])]/mc04->rp[%d]):log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hRpbox","etrack->qualct==1","colz");
-    taTree->Draw("log(hctim->mrp[int(etrack->udata[0])]/mc04->rp[%d]):log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profRp","etrack->qualct==1","prof same");
+    taTree->Draw("log(hctim->mrp[int(etrack->udata[0])]/mc04->rp[%d]):log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hRpbox","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","colz");
+    taTree->Draw("log(hctim->mrp[int(etrack->udata[0])]/mc04->rp[%d]):log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>profRp","etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20","prof same");
     
     profRp->SetLineColor(kRed);
     profRp->SetLineWidth(2);

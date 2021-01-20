@@ -2,8 +2,10 @@
 
 import ROOT
 import TLPY
+from TLPY import *
 import TDSTio
 import array
+import numpy as np
 from os import system
 from sys import exit
 import numpy as np
@@ -13,20 +15,29 @@ def read_in_args():
     parser = argparse.ArgumentParser(description = 'Add the branch to taTree that flags event as quality.')
     parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want that the root file is for. (brtax4/mdtax4)',required=True)
     parser.add_argument('-i',metavar='infile',action='store',help='Input ROOT file that needs quality events flagged.',required=True)
-    parser.add_argument('-t',metavar='datatype',action='store',help='(data/mc)'.required=True)
     args     = parser.parse_args()
     det      = args.det
     infile   = args.i
-    datatype = args.t
+    #datatype = args.t
     if det == 'mdtax4':
         det_id = 6
         sd_id  = 1 # TAX4SD_208_N
     if det == 'brtax4':
         det_id = 7
         sd_id  = 2 # TAX4SD_208_S
-    return det,det_id,sd_id,infile,datatype
+    return det,det_id,sd_id,infile
 
-det,det_id,sd_id,infile,datatype = read_in_args()
+def get_border_distance(fdsiteid,sd_det_id,nx,ny,nz,rp,psi):
+    # Convert FD core coordinates to CLF core coordinates
+    sdp_n = np.array([nx,ny,nz])
+    t_fd  = tlevent_track(sdp_n,rp,psi,0)
+    t_clf = tlevent_track(TLUTI_REC.fd2clf(fdsiteid,t_fd))
+    xcore = t_clf.xyz[0]
+    ycore = t_clf.xyz[1]
+    bdist = TLUTI_DETECTORS.get_sd_bdist(sd_det_id, xcore, ycore)
+    return bdist
+
+det,det_id,sd_id,infile = read_in_args()
 
 # Load ROOT file
 filename = infile
@@ -74,8 +85,8 @@ for i in range(events):
 
     # Applying functions that part of C macro
     bracketing_cut        = ROOT.bracketing_cut(dep_first,dep_last,xmax,10,10)
-    get_border_distance   = ROOT.get_border_distance(det_id,sd_id,nx,ny,nz,rp,psi)
-    if get_border_distance > 100:
+    bdist                 = get_border_distance(det_id,sd_id,nx,ny,nz,rp,psi)
+    if bdist > 100:
         border_cut = 1.0
     else:
         border_cut = 0.0
@@ -87,7 +98,7 @@ for i in range(events):
         tracklength_cut = 1.0
     else:
         tracklength_cut = 0.0
-    if (prfc_chi2/prfc_dof) <= 10:
+    if (prfc_chi2/prfc_dof) <= 20:
         profile_chi2dof_cut = 1.0
     else:
         profile_chi2dof_cut = 0.0
@@ -103,6 +114,7 @@ for i in range(events):
         dep_first_cut = 1.0
     else:
         dep_first_cut = 0.0
+
 
     # Checking if cuts drops event
     if bracketing_cut == 0:
@@ -123,7 +135,7 @@ for i in range(events):
         psi_cut_loss += 1
     if dep_first_cut == 0:
         dep_first_cut_loss += 1
-
+        
     leafValue[0] = bracketing_cut * border_cut * core_position_cut * event_saturation_cut * tracklength_cut * profile_chi2dof_cut * theta_cut * psi_cut * dep_first_cut
     qualct.Fill()
     
@@ -145,5 +157,5 @@ print('''
 **************************************
 '''.format(events,bracketing_cut_loss,border_cut_loss,core_position_cut_loss,event_saturation_cut_loss,tracklength_cut_loss,profile_chi2dof_cut_loss,theta_cut_loss,psi_cut_loss,dep_first_cut_loss))
 
-taTree.Draw("(log((missing_E_corr(prfc->eng[6]))/mc04->energy)):log10(mc04->energy)","qualct ==1","prof")
+#taTree.Draw("(log((missing_E_corr(prfc->eng[6]))/mc04->energy)):log10(mc04->energy)","qualct ==1","prof")
 system('read gonext')

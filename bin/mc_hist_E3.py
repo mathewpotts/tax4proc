@@ -71,7 +71,7 @@ if __name__=='__main__':
     
     
     # Draw Recon and save energy histogram
-    taTree.Draw("log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hErecon","(etrack->qualct==1) * weight(log10(mc04->energy))","sames")
+    taTree.Draw("log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hErecon","(etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20) * weight(log10(mc04->energy))","sames")
     hErecon.SaveAs("{0}/processing/hErecon_E3.root".format(fd_path))
     ROOT.gPad.Update()
     

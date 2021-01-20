@@ -104,6 +104,7 @@ if __name__=='__main__':
     by_day_ontime_list = []
 
     # Open each file and calculate the ontime for each mirror 
+    # Make sure to delete epoch 0,1 ontime files or there will be error with MDTAx4
     for file in filelist:
         date = file[-32:-28]+file[-27:-25]+file[-24:-22]
         part = int(file[-20:-18])
@@ -124,11 +125,11 @@ if __name__=='__main__':
                 by_day_ontime_list.append([date_prev,float(date_ontime_list[-1][1]) - float(date_ontime_list[-2][1]),float(gw_ontime_list[-1][1]) - float(gw_ontime_list[-2][1])])
             else:
                 by_day_ontime_list.append([date_prev,float(date_ontime_list[-1][1]),float(gw_ontime_list[-1][1])])
-        elif date == '20201107' and part == 2:
+        elif date == '20201222' and part == 2:
             date_ontime_list.append([int(date),total_ontime/3600])
             gw_ontime_list.append([int(date),gw_ontime/3600])
             by_day_ontime_list.append([int(date),float(date_ontime_list[-1][1]) - float(date_ontime_list[-2][1]),float(gw_ontime_list[-1][1]) - float(gw_ontime_list[-2][1])])
-        elif date != '20201107' and part != 1:
+        elif date != '20201222' and part != 1:
             date_ontime    += tmp_ontime
             gw_date_ontime += is_gw(file,det)*tmp_ontime
         date_prev = int(date)

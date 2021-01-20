@@ -45,23 +45,24 @@ Int_t bracketing_cut(Double_t dep_first, Double_t dep_last, Double_t xmax, Doubl
   return 0;
 }
 
-Double_t get_border_distance(Int_t fdsiteid,
-			     Int_t sd_det_id,
-			     Double_t nx, Double_t ny, Double_t nz,
-			     Double_t rp, Double_t psi)
-{
-  // Convert FD core coordinates to CLF coordinates
-  Double_t sdp_n[3] = {nx, ny, nz};
-  tlevent_track t_fd(sdp_n,rp,psi,0);
-  tlevent_track t_clf = TLUTI_REC::fd2clf(fdsiteid,t_fd);
 
-  Double_t xcore = t_clf.xyz[0];
-  Double_t ycore = t_clf.xyz[1];
+// Double_t get_border_distance(Int_t fdsiteid,
+// 			     Int_t sd_det_id,
+// 			     Double_t nx, Double_t ny, Double_t nz,
+// 			     Double_t rp, Double_t psi)
+// {
+//   // Convert FD core coordinates to CLF coordinates
+//   Double_t sdp_n[3] = {nx, ny, nz};
+//   tlevent_track t_fd(sdp_n,rp,psi,0);
+//   tlevent_track t_clf = TLUTI_REC::fd2clf(fdsiteid,t_fd);
 
-  Double_t bdist = TLUTI_DETECTORS::get_sd_bdist(TASD_MAIN, xcore, ycore);
+//   Double_t xcore = t_clf.xyz[0];
+//   Double_t ycore = t_clf.xyz[1];
+
+//   Double_t bdist = TLUTI_DETECTORS::get_sd_bdist(sd_det_id, xcore, ycore);
   
-  return bdist;
-}
+//   return bdist;
+// }
 
 // Check that the calculated core positions between the FD and SD are within a certain tolerance
 Int_t is_core_position_diff(Int_t fdsiteid,
