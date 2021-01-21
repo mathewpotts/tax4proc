@@ -19,11 +19,13 @@ def read_in_args():
     det=args.det
     if det == 'mdtax4':
         fd_path = os.environ['MDTAX4_DATA_ROOT']
+        det_id=6
     if det == 'brtax4':
         fd_path = os.environ['BRTAX4_DATA_ROOT']
+        det_id=7
     plot=args.plot
     print('Plotting ' + plot + ' data-mc comparison plot(s). This will take a couple minutes.')
-    return det,plot,fd_path
+    return det,plot,fd_path,det_id
 
 def ngmpe(taTree1,taTree2,det):
     # Define constants
@@ -127,7 +129,7 @@ def find_last_date(fd_path):
     date_mc = file[-9:-1]
     return date_data,date_mc
 
-def data_mc_compare(taTree1,taTree2,plot):
+def data_mc_compare(taTree1,taTree2,plot,det_id):
     # Define variables based on function input
     if plot == 'phi':
         nbins        = 20
@@ -162,14 +164,14 @@ def data_mc_compare(taTree1,taTree2,plot):
         bin_lo       = 150
         bin_up       = 1400
         hist_title   = 'phpgt;N_{EVENTS} / BIN'
-        hist_draw    = 'stpln->ph_per_gtube[6]'
+        hist_draw    = 'stpln->ph_per_gtube[{0}]'.format(det_id)
         compare_sym  = 'phpgt'
     if plot == 'track':
         nbins        = 10
         bin_lo       = 8
         bin_up       = 28
         hist_title   = 'track (degrees);N_{EVENTS} / BIN'
-        hist_draw    = 'stpln->tracklength[6]'
+        hist_draw    = 'stpln->tracklength[{0}]'.format(det_id)
         compare_sym  = 'track'
     
     # Make data histograms
@@ -365,7 +367,7 @@ def data_mc_compare(taTree1,taTree2,plot):
 
 if __name__=='__main__':
     # Define variables
-    det,plot,fd_path  = read_in_args()
+    det,plot,fd_path,det_id  = read_in_args()
     last_date_data,last_date_mc = find_last_date(fd_path)
     filename1 = '{2}/pass5/data/processing/root_all_files/20190625-{1}.{0}.ps5.ps2g.drmdpcgf.root'.format(det,last_date_data,fd_path)
     filename2 = '{2}/mc/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{0}.ps5.drmdpcgf.root'.format(det,last_date_mc,fd_path)
@@ -377,13 +379,13 @@ if __name__=='__main__':
     taTree2 = file2.Get("taTree")
 
     if plot == 'all':
-        data_mc_compare(taTree1,taTree2,'phi')
-        data_mc_compare(taTree1,taTree2,'theta')
-        data_mc_compare(taTree1,taTree2,'psi')
-        data_mc_compare(taTree1,taTree2,'phpgt')
-        data_mc_compare(taTree1,taTree2,'track')
+        data_mc_compare(taTree1,taTree2,'phi',det_id)
+        data_mc_compare(taTree1,taTree2,'theta',det_id)
+        data_mc_compare(taTree1,taTree2,'psi',det_id)
+        data_mc_compare(taTree1,taTree2,'phpgt',det_id)
+        data_mc_compare(taTree1,taTree2,'track',det_id)
         ngmpe(taTree1,taTree2,det)
     elif plot != 'ngmpe':
-        data_mc_compare(taTree1,taTree2,plot)
+        data_mc_compare(taTree1,taTree2,plot,det_id)
     else:
         ngmpe(taTree1,taTree2,det)
