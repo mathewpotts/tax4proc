@@ -164,7 +164,6 @@ icrc_compspec.Draw("P");
 ROOT.gPad.Update()
 
 
-
 # Prompt exit
 print('\nPress enter to continue.\n')
 os.system('read gonext')

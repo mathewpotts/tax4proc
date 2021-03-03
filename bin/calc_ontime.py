@@ -125,11 +125,11 @@ if __name__=='__main__':
                 by_day_ontime_list.append([date_prev,float(date_ontime_list[-1][1]) - float(date_ontime_list[-2][1]),float(gw_ontime_list[-1][1]) - float(gw_ontime_list[-2][1])])
             else:
                 by_day_ontime_list.append([date_prev,float(date_ontime_list[-1][1]),float(gw_ontime_list[-1][1])])
-        elif date == '20201222' and part == 2:
+        elif date == '20210202' and part == 2:
             date_ontime_list.append([int(date),total_ontime/3600])
             gw_ontime_list.append([int(date),gw_ontime/3600])
             by_day_ontime_list.append([int(date),float(date_ontime_list[-1][1]) - float(date_ontime_list[-2][1]),float(gw_ontime_list[-1][1]) - float(gw_ontime_list[-2][1])])
-        elif date != '20201222' and part != 1:
+        elif date != '20210202' and part != 1:
             date_ontime    += tmp_ontime
             gw_date_ontime += is_gw(file,det)*tmp_ontime
         date_prev = int(date)
@@ -157,9 +157,9 @@ if __name__=='__main__':
     ontime_per_day   = ROOT.TGraph(int(len(date_ontime_list)),floatx,floaty)
     gwtime_per_day   = ROOT.TGraph(int(len(gw_ontime_list)),floatx,floaty2)
     if det == 'mdtax4':
-        daily_bin = 516
+        daily_bin = 588
     if det == 'brtax4':
-        daily_bin = 397
+        daily_bin = 469
     by_day_ontime    = ROOT.TH1F('by_day_ontime','by_day_ontime',daily_bin,floatx[0],floatx[-1])
     by_gw_day_ontime = ROOT.TH1F('by_gw_day_ontime','by_gw_day_ontime',daily_bin,floatx[0],floatx[-1])
     for i,date in enumerate(floatx):

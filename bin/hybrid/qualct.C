@@ -35,15 +35,15 @@ Double_t weight(Double_t log10en)
   return TMath::Power(10.0, 2*(log10en-log10en_min))*spectrum_function(log10en);
 }
 
-Int_t bracketing_cut(Double_t dep_first, Double_t dep_last, Double_t xmax, Double_t dx1, Double_t dx2)
-{
-  Double_t lower_bracket = dep_first + dx1;
-  Double_t upper_bracket = dep_last - dx2;
-  if (lower_bracket < xmax && upper_bracket > xmax){
-    return 1;
-  }
-  return 0;
-}
+// Int_t bracketing_cut(Double_t dep_first, Double_t dep_last, Double_t xmax, Double_t dx1, Double_t dx2)
+// {
+//   Double_t lower_bracket = dep_first + dx1;
+//   Double_t upper_bracket = dep_last - dx2;
+//   if (lower_bracket < xmax && upper_bracket > xmax){
+//     return 1;
+//   }
+//   return 0;
+// }
 
 
 // Double_t get_border_distance(Int_t fdsiteid,
@@ -65,51 +65,51 @@ Int_t bracketing_cut(Double_t dep_first, Double_t dep_last, Double_t xmax, Doubl
 // }
 
 // Check that the calculated core positions between the FD and SD are within a certain tolerance
-Int_t is_core_position_diff(Int_t fdsiteid,
-			     Double_t xcore_SD, Double_t ycore_SD,
-			     Double_t nx, Double_t ny, Double_t nz,
-			     Double_t rp, Double_t psi,
-			     Int_t tolerance)
-{
-  // Convert FD core coordinates to CLF coordinates 
-  Double_t sdp_n[3] = {nx, ny, nz};
-  tlevent_track t_fd(sdp_n,rp,psi,0);
-  tlevent_track t_clf = TLUTI_REC::fd2clf(fdsiteid,t_fd);
+// Int_t is_core_position_diff(Int_t fdsiteid,
+// 			     Double_t xcore_SD, Double_t ycore_SD,
+// 			     Double_t nx, Double_t ny, Double_t nz,
+// 			     Double_t rp, Double_t psi,
+// 			     Int_t tolerance)
+// {
+//   // Convert FD core coordinates to CLF coordinates 
+//   Double_t sdp_n[3] = {nx, ny, nz};
+//   tlevent_track t_fd(sdp_n,rp,psi,0);
+//   tlevent_track t_clf = TLUTI_REC::fd2clf(fdsiteid,t_fd);
 
-  Double_t xcore = t_clf.xyz[0];
-  Double_t ycore = t_clf.xyz[1];
+//   Double_t xcore = t_clf.xyz[0];
+//   Double_t ycore = t_clf.xyz[1];
   
-  Double_t xcore_diff = abs(xcore-xcore_SD);
-  Double_t ycore_diff = abs(ycore-ycore_SD);
+//   Double_t xcore_diff = abs(xcore-xcore_SD);
+//   Double_t ycore_diff = abs(ycore-ycore_SD);
 
-  if (xcore_diff < tolerance && ycore_diff < tolerance)
-    {
-      return 1;
-    }
+//   if (xcore_diff < tolerance && ycore_diff < tolerance)
+//     {
+//       return 1;
+//     }
   
-  return 0;
-}
+//   return 0;
+// }
 
-// Cut out events that have a certain percentage of saturated tubes
-Int_t event_saturation_cut(vector<int> tubeArray,Int_t saturation_limit){
-  Double_t nentries = tubeArray.size();
-  Double_t saturation_count = 0.0;
+// // Cut out events that have a certain percentage of saturated tubes
+// Int_t event_saturation_cut(vector<int> tubeArray,Int_t saturation_limit){
+//   Double_t nentries = tubeArray.size();
+//   Double_t saturation_count = 0.0;
 
-  for(Int_t i = 0;i < nentries;i++){
-      if (tubeArray[i] == -2){
-  	  saturation_count += 1.0;
-  	}
-    }
+//   for(Int_t i = 0;i < nentries;i++){
+//       if (tubeArray[i] == -2){
+//   	  saturation_count += 1.0;
+//   	}
+//     }
   
-  Double_t saturation_percent = saturation_count / nentries;
-  Double_t saturation_plimit  = saturation_limit / 100.;
+//   Double_t saturation_percent = saturation_count / nentries;
+//   Double_t saturation_plimit  = saturation_limit / 100.;
 
-  if (saturation_percent <= saturation_plimit){
-      return 1;
-    }
+//   if (saturation_percent <= saturation_plimit){
+//       return 1;
+//     }
   
-  return 0;
-}
+//   return 0;
+// }
 
 Double_t missing_E_corr(Double_t eng_EeV)
 {

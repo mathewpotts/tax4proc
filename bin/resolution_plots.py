@@ -7,36 +7,31 @@ import TLPY
 import os
 import argparse
 
+# Call in external C script with quality cut functions
+tax4proc_bin = os.environ['TAX4PROC_BIN']
+ROOT.gROOT.LoadMacro("{0}/hybrid/qualct.C".format(tax4proc_bin))
+
 def read_in_args():
     parser = argparse.ArgumentParser(description = 'Concatinate data files (optional) and plot the data energy histogram.')
     parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4)',required=True)
     parser.add_argument('-plot',metavar='plot',action='store',help='Choose which resolution plots you want to plot. (all,energy,psi,theta,rp)',default='all')
+    parser.add_argument('-hyb',action='store_true',help='Use this flag if you want are dealing with hybrid data files.',default=False)
     args = parser.parse_args()
-    det=args.det
+    det  = args.det
+    hyb  = args.hyb
     if det == 'mdtax4':
-        det_id  = 6
-        fd_path = os.environ['MDTAX4_DATA_ROOT']
+        det_id   = 6
+        fd_path  = os.environ['MDTAX4_DATA_ROOT'] if not hyb else os.environ['MDTAX4_HYBRID_ROOT']
     if det == 'brtax4':
-        det_id  = 7
-        fd_path = os.environ['BRTAX4_DATA_ROOT']
-    os.system('mkdir -p {0}/plots/resolution'.format(fd_path))
+        det_id   = 7
+        fd_path  = os.environ['BRTAX4_DATA_ROOT'] if not hyb else os.environ['BRTAX4_HYBRID_ROOT']
+    if not hyb:
+        os.system('mkdir -p {0}/plots/resolution'.format(fd_path))
+    else:
+        os.system('mkdir -p {0}/plots/resolution'.format(hyb_path))
     plots=args.plot
     print('Plotting ' + plots + ' resolution plot(s). This will take a couple minutes.')
-    return det,plots,det_id,fd_path
-
-missing_E_corr_def = '''
-Double_t missing_E_corr(Double_t eng_EeV)
-{
-  Double_t eng_eV = 1e18 * eng_EeV;
-
-  TF1 *JHK = new TF1("JHK","x / (-16.62 + 3.58 * log10(x) - 0.2786 * TMath::Power(log10(x),2) + 0.009775 * TMath::Power(log10(x),3) - 0.0001299 * TMath::Power(log10(x),4))",18.0,21.0);
-
-  Double_t E = JHK->Eval(eng_eV);
-
-  return E; 
-}
-'''
-ROOT.gInterpreter.Declare(missing_E_corr_def)
+    return det,plots,det_id,fd_path,hyb
 
 def plot_resolution(taTree,plot,fd_path,det_id):
     kRed = 2
@@ -186,9 +181,9 @@ def find_last_date(fd_path):
 
 if __name__=='__main__':
     # Define variables
-    det,plot,det_id,fd_path = read_in_args()
-    last_date = find_last_date(fd_path)
-    filename = '{0}/mc/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{2}.ps5.drmdpcgf.root'.format(fd_path,last_date,det)
+    det,plot,det_id,fd_path,hyb = read_in_args()
+    last_date                   = find_last_date(fd_path)
+    filename                    = '{0}/mc/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{2}.ps5.drmdpcgf.root'.format(fd_path,last_date,det) if not hyb else '{0}/mc/hybrid_mc.all.cut.root'.format(hyb_path)
 
     # Declare C prof plot functions
     prof_declare(det_id)

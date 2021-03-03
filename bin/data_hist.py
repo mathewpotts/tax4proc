@@ -28,6 +28,7 @@ def read_in_args():
         fd      = 'TAX4_BLACK_ROCK'
         fd_path = os.environ['BRTAX4_DATA_PASS5']
     return concat,fd,fd_path,det,hyb
+    
 
 def concat_dst(fd,fd_path,date,det):
     # Generate directories
@@ -46,7 +47,7 @@ def concat_dst(fd,fd_path,date,det):
 
 def hybrid(hybrid_path,last_date,det_id):
     # Load pass5 root tree
-    filepath = "{0}/pass5/hybrid_190625-{1}.tlhbgeomnp.root".format(fd_path,last_date[2:])
+    filepath = "{0}/pass5/hybrid_190625-{1}.tlhbgeomnp.root".format(fd_path,last_date[2:]) if det_id == 6 else "{0}/pass5/hybrid_191022-{1}.tlhbgeomnp.root".format(fd_path,last_date[2:])
     file = ROOT.TFile(filepath,"r")
     taTree = file.Get("taTree")
     
@@ -54,10 +55,11 @@ def hybrid(hybrid_path,last_date,det_id):
     hEdata = ROOT.TH1D("hEdata",";log_{10}(E/eV);N_{EVENTS} / BIN",nxbins,log10en_lo,log10en_up);
     
     # Draw and save energy histogram
-    taTree.Draw("log10((missing_E_corr(prfc.eng[{0}])))>>hEdata".format(det_id),"good_weather_cut(tlweat.code,fscn1->mir[1])==1 && qualct==1 && log10(missing_E_corr(prfc.eng[{0}]))>=18.5".format(det_id))
+    taTree.Draw("log10((missing_E_corr(prfc.eng[{0}])))>>hEdata".format(det_id),"good_weather_cut(tlweat.code,fscn1->mir[1])==1 && tax4.qualct==1 && log10(missing_E_corr(prfc.eng[{0}]))>=18.5".format(det_id))
     hEdata.SaveAs("{0}/hEdata.root".format(fd_path))
 
-    ROOT.gPad.SaveAs("{0}/plots/hEdata_190625-{1}.png".format(fd_path,last_date[2:]))
+    saveimg = "{0}/plots/hEdata_190625-{1}.png".format(fd_path,last_date[2:]) if det_id == 6 else "{0}/plots/hEdata_191022-{1}.png".format(fd_path,last_date[2:])
+    ROOT.gPad.SaveAs(saveimg)
     
     # Prompt exit
     print('\nPress enter to continue.\n')
@@ -101,11 +103,11 @@ if __name__=='__main__':
     hEdata = ROOT.TH1D("hEdata",";log_{10}(E/eV);N_{EVENTS} / BIN",nxbins,log10en_lo,log10en_up);
     
     # Draw and save energy histogram
-    taTree.Draw("log10((missing_E_corr(prfc.eng[etrack.udata[0]])))>>hEdata","good_weather_cut(tlweat.code,fscn1->mir[1])==1 && log10(missing_E_corr(prfc.eng[etrack.udata[0]]))>=18.5 && etrack.qualct==1 &&(prfc.chi2[etrack.udata[0]]/prfc.ndf[etrack.udata[0]])<20")
-    #hEdata.SaveAs("{0}/processing/hEdata.root".format(fd_path))
+    taTree.Draw("log10((missing_E_corr(prfc.eng[etrack.udata[0]])))>>hEdata","good_weather_cut(tlweat.code,fscn1->mir[1])==1 && log10(missing_E_corr(prfc.eng[etrack.udata[0]]))>=18.5 && tax4.qualct==1 &&(prfc.chi2[etrack.udata[0]]/prfc.ndf[etrack.udata[0]])<20")
+    hEdata.SaveAs("{0}/processing/hEdata.root".format(fd_path))
 
     plot_path = os.environ['{0}_DATA_ROOT'.format(det.upper())]
-    #ROOT.gPad.SaveAs("{0}/plots/hEdata_20190625-{1}.png".format(plot_path,last_date))
+    ROOT.gPad.SaveAs("{0}/plots/hEdata_20190625-{1}.png".format(plot_path,last_date))
     
     # Prompt exit
     print('\nPress enter to continue.\n')

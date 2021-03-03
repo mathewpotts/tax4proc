@@ -12,20 +12,24 @@ tax4proc = os.environ['TAX4PROC']
 def read_in_args():
     parser = argparse.ArgumentParser(description = 'Plot the aperture for detector.')
     parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4)',required=True)
+    parser.add_argument('-hyb',action='store_true',help='Use this flag if you want are dealing with hybrid data files.',default=False)
     args = parser.parse_args()
-    det=args.det
+    det  = args.det
+    hyb  = args.hyb
     if det == 'mdtax4':
         fd_path = os.environ['MDTAX4_DATA_ROOT']
+        hyb_path = os.environ['MDTAX4_HYBRID_ROOT']
     elif det == 'brtax4':
         fd_path = os.environ['BRTAX4_DATA_ROOT']
-    return det,fd_path
+        hyb_path = os.environ['BRTAX4_HYBRID_ROOT']
+    return det,fd_path,hyb,hyb_path
 
 if __name__=='__main__':
     # Define variables
-    det,fd_path     = read_in_args()
-    filepath_data   = '{0}/pass5/data/processing/hEdata.root'.format(fd_path)
-    filepath_exp    = '{0}/mc/processing/hExposure.root'.format(fd_path)
-    fldc_err = ROOT.TFeldmanCousins(0.65)
+    det,fd_path,hyb,hyb_path = read_in_args()
+    filepath_data            = '{0}/pass5/data/processing/hEdata.root'.format(fd_path) if not hyb else '{0}/hEdata.root'.format(hyb_path)
+    filepath_exp             = '{0}/mc/processing/hExposure.root'.format(fd_path) if not hyb else '{0}/hExposure.root'.format(hyb_path)
+    fldc_err                 = ROOT.TFeldmanCousins(0.65)
     
     # Grabbing Energy histogram for the data root file
     fEdata = ROOT.TFile(filepath_data,"r")
@@ -157,8 +161,12 @@ if __name__=='__main__':
 
     # Save spectrum and flux
     ROOT.gPad.Update()
-    flux.SaveAs('{0}/plots/monocular_flux.png'.format(fd_path))
-    spec.SaveAs('{0}/plots/monocular_spectrum.png'.format(fd_path))
+    if not hyb:
+        flux.SaveAs('{0}/plots/monocular_flux.png'.format(fd_path))
+        spec.SaveAs('{0}/plots/monocular_spectrum.png'.format(fd_path))
+    else:
+        flux.SaveAs('{0}/plots/monocular_flux.png'.format(hyb_path))
+        spec.SaveAs('{0}/plots/monocular_spectrum.png'.format(hyb_path))
     
     # Prompt exit
     print('\nPress enter to continue.\n')

@@ -15,17 +15,19 @@ def read_in_args():
     parser = argparse.ArgumentParser(description = 'Concatinate data files (optional) and plot the data energy histogram.')
     parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4)',required=True)
     parser.add_argument('-plot',metavar='plot',action='store',help='Choose which data-mc comparison plots you want to plot. (phi,theta,rp,psi,phpgt,track,ngmpe)',default='all')
+    parser.add_argument('-hyb',action='store_true',help='Use this flag if you want are dealing with hybrid data files.',default=False)
     args = parser.parse_args()
-    det=args.det
+    det  = args.det
+    hyb  = args.hyb
     if det == 'mdtax4':
-        fd_path = os.environ['MDTAX4_DATA_ROOT']
-        det_id=6
+        fd_path = os.environ['MDTAX4_DATA_ROOT'] if not hyb else os.environ['MDTAX4_HYBRID_ROOT']
+        det_id  = 6
     if det == 'brtax4':
-        fd_path = os.environ['BRTAX4_DATA_ROOT']
-        det_id=7
+        fd_path = os.environ['BRTAX4_DATA_ROOT'] if not hyb else os.environ['BRTAX4_HYBRID_ROOT']
+        det_id  = 7
     plot=args.plot
     print('Plotting ' + plot + ' data-mc comparison plot(s). This will take a couple minutes.')
-    return det,plot,fd_path,det_id
+    return det,plot,fd_path,det_id,hyb
 
 def ngmpe(taTree1,taTree2,det):
     # Define constants
@@ -55,7 +57,7 @@ def ngmpe(taTree1,taTree2,det):
       
         # Loop over all possible  mirror instances
         for j in taTree1.stpln.mir_ngtube:
-            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.5:
+            if j > 0 and j <= 256 and ROOT.good_weather_cut(taTree1.tlweat.code,taTree1.fscn1.mir[1])==1 and taTree1.qualct==1 and np.log10((ROOT.missing_E_corr(taTree1.prfc.eng[int(taTree1.etrack.udata[0])])))>18.5:
                 n_gmir += 1
 
         hngmpedata.Fill(n_gmir)
@@ -78,7 +80,7 @@ def ngmpe(taTree1,taTree2,det):
       
         # Loop over all possible  mirror instances
         for j in taTree2.stpln.mir_ngtube:
-            if j > 0 and j <= 256 and taTree2.etrack.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.5:
+            if j > 0 and j <= 256 and taTree2.qualct==1 and np.log10((ROOT.missing_E_corr(taTree2.prfc.eng[int(taTree2.etrack.udata[0])])))>18.5:
                 n_gmir += 1
 
         hngmpemc.Fill(n_gmir,ROOT.weight(np.log10(taTree2.mc04.energy)))
@@ -367,10 +369,14 @@ def data_mc_compare(taTree1,taTree2,plot,det_id):
 
 if __name__=='__main__':
     # Define variables
-    det,plot,fd_path,det_id  = read_in_args()
-    last_date_data,last_date_mc = find_last_date(fd_path)
-    filename1 = '{2}/pass5/data/processing/root_all_files/20190625-{1}.{0}.ps5.ps2g.drmdpcgf.root'.format(det,last_date_data,fd_path)
-    filename2 = '{2}/mc/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{0}.ps5.drmdpcgf.root'.format(det,last_date_mc,fd_path)
+    det,plot,fd_path,det_id,hyb  = read_in_args()
+    last_date_data,last_date_mc  = find_last_date(fd_path)
+    if not hyb:
+        filename1 = '{2}/pass5/data/processing/root_all_files/20190625-{1}.{0}.ps5.ps2g.drmdpcgf.root'.format(det,last_date_data,fd_path)
+        filename2 = '{2}/mc/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{0}.ps5.drmdpcgf.root'.format(det,last_date_mc,fd_path)
+    else:
+        filename1 = '{0}/pass5/hybrid_190625-201222.tlhbgeomnp.root'.format(fd_path)
+        filename2 = '{0}/mc/hybrid_mc.all.cut.root'.format(fd_path)
 
     # Open MC file
     file1   = ROOT.TFile(filename1,"r")

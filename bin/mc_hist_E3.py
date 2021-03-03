@@ -6,6 +6,7 @@ import TDSTio
 import TLPY
 import os
 import argparse
+import sys
 
 # Call in external C script with quality cut functions
 ROOT.gROOT.LoadMacro("hybrid/qualct.C")
@@ -14,16 +15,20 @@ def read_in_args():
     parser = argparse.ArgumentParser(description = 'Concatinate data files (optional) and plot the mc energy histogram.')
     parser.add_argument('-det',metavar='detector',action='store',help='Detector that you want to produce a data histogram for. (brtax4/mdtax4)',required=True)
     parser.add_argument('-concat',action='store_true',help='Use this flag if you want to concatinate all the data files into a single file.',default=False)
+    parser.add_argument('-hyb',action='store_true',help='Is mc file hybrid?',default=False)
     args = parser.parse_args()
     concat=args.concat
     det=args.det
+    hyb=args.hyb
     if det == 'mdtax4':
-        fd = 'TAX4_MIDDLE_DRUM'
-        fd_path = os.environ['MDTAX4_MC_ROOT']
+        fd      = 'TAX4_MIDDLE_DRUM'
+        fd_path = os.environ['MDTAX4_MC_ROOT'] if not hyb else '{0}/mc'.format(os.environ['MDTAX4_HYBRID_ROOT'])
+        det_id  = 6
     if det == 'brtax4':
-        fd = 'TAX4_BLACK_ROCK'
-        fd_path = os.environ['BRTAX4_MC_ROOT']
-    return concat,fd,fd_path,det
+        fd      = 'TAX4_BLACK_ROCK'
+        fd_path = os.environ['BRTAX4_MC_ROOT'] if not hyb else '{0}/mc'.format(os.environ['BRTAX4_HYBRID_ROOT'])
+        det_id  = 7 
+    return concat,fd,fd_path,det,det_id,hyb
 
 def concat_dst(fd,fd_path,date,det):
     # Generate directories
@@ -49,11 +54,11 @@ def find_last_date(fd_path):
 
 if __name__=='__main__':
     # Define variables
-    concat,fd,fd_path,det = read_in_args()
-    last_date = find_last_date(fd_path)
+    concat,fd,fd_path,det,det_id,hyb = read_in_args()
+    last_date                        = find_last_date(fd_path)
     
     # Concatinate files?
-    if concat is True:
+    if concat is True and hyb is False:
         concat_dst(fd,fd_path,last_date,det)
 
     # Create Canvas
@@ -61,7 +66,7 @@ if __name__=='__main__':
     canvas.cd()
     
     # Load mc pass5 root tree
-    filepath = "{0}/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{2}.ps5.drmdpcgf.root".format(fd_path,last_date,det)
+    filepath = "{0}/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{2}.ps5.drmdpcgf.root".format(fd_path,last_date,det) if not hyb else "{0}/hybrid_mc.all.cut.root".format(fd_path)
     print("Opening..", filepath)
     file = ROOT.TFile(filepath,"r")
     taTree = file.Get("taTree")
@@ -69,19 +74,27 @@ if __name__=='__main__':
     # Make TH1
     hErecon  = ROOT.TH1D("hErecon",";log_{10}(E/eV);N_{EVENTS} / BIN",40,17,21)
     
-    
     # Draw Recon and save energy histogram
-    taTree.Draw("log10((missing_E_corr(prfc->eng[etrack->udata[0]])))>>hErecon","(etrack->qualct==1 && (prfc->chi2[etrack->udata[0]]/prfc->ndf[etrack->udata[0]])<20) * weight(log10(mc04->energy))","sames")
-    hErecon.SaveAs("{0}/processing/hErecon_E3.root".format(fd_path))
-    ROOT.gPad.Update()
+    hErecon_draw = "log10((missing_E_corr(prfc->eng[{0}])))>>hErecon".format(det_id) if  hyb else "log10((missing_E_corr(prfc->eng[tax4->fit_num])))>>hErecon"
+    hErecon_save = "{0}/hErecon_E3.root".format(os.environ['{0}_HYBRID_ROOT'.format(det.upper())]) if hyb else "{0}/processing/hErecon_E3.root".format(fd_path)
+
+    taTree.Draw(hErecon_draw,"(tax4->qualct==1) * weight(log10(mc04->energy))")
+    hErecon.SaveAs(hErecon_save)
+    ROOT.gPad.Update()   
     
     # Prompt exit
     print('\nPress enter to continue.\n')
     os.system('read gonext')
     print('Plotting thrown...')
 
+    if hyb:
+        print("Copying lastest hEthrown_E3.root to hybrid folder...")
+        os.system("cp -v ~/data/{0}/mc/processing/hEthrown_E3.root {1}".format(det,os.environ['{0}_HYBRID_ROOT'.format(det.upper())]))
+        sys.exit(0)
+
     # Load mc pass0 root tree
     filepath = "{0}/processing/root_all_files/pr.1e17-1e21.20190625-{1}.{2}.ps0.root".format(fd_path,last_date,det)
+    print("Opening..", filepath)
     file = ROOT.TFile(filepath,"r")
     taTree2 = file.Get("taTree")
 
