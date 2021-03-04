@@ -32,13 +32,16 @@ class hybrid_mc_gen:
         mkdir -p {0}/{1}/pass3/tl_1sd_hy_sim
         mkdir -p {0}/{1}/pass4/
         mkdir -p {0}/{1}/pass5/
+        mkdir -p {0}/{1}/log/pass3/
+        mkdir -p {0}/{1}/log/pass4/
+        mkdir -p {0}/{1}/log/pass5/{1}/
         '''.format(self.HYBRID_MC_PATH,DATE))
 
     def tl_1sd_hy_simulation(self,DATE):
         print("Adding SD simulation data to {0} FD MC...".format(DATE))
         os.system('''
         readlink -f {1}/{2}/pass3/*ps3.dst > {0}/{2}/want_tamc_all.ok.txt; 
-        tl_1sd_hy_simulation.run -f -sd_det {3} -i {0}/{2}/want_tamc_all.ok.txt; 
+        tl_1sd_hy_simulation.run -f -sd_det {3} -i {0}/{2}/want_tamc_all.ok.txt >& {0}/{2}/log/pass3/{2}_1sd_hy_simulation.log; 
         mv *wsds.dst.gz {0}/{2}/pass3/tl_1sd_hy_sim/; 
         rm -rvf {0}/{2}/want_tamc_all.ok.txt;
         '''.format(self.HYBRID_MC_PATH,self.MONO_MC_PATH,DATE,self.SD_ID))
@@ -47,7 +50,7 @@ class hybrid_mc_gen:
         print("Adding tlfptn bank to {0} MC".format(DATE))
         os.system('''
         readlink -f {0}/{1}/pass3/tl_1sd_hy_sim/*ps3.wsds.dst.gz > {0}/{1}/want_wsds.txt;
-        tlfptn.run -det {2} -i {0}/{1}/want_wsds.txt -f -no_bw -o {0}/{1}/pass3;
+        tlfptn.run -det {2} -i {0}/{1}/want_wsds.txt -f -no_bw -o {0}/{1}/pass3 >& {0}/{1}/log/pass3/{1}_tlfptn.log;
         rm -rvf {0}/{1}/want_wsds.txt;
         '''.format(self.HYBRID_MC_PATH,DATE,self.SD_ID))
 
@@ -55,7 +58,7 @@ class hybrid_mc_gen:
         print("Running tlhbgeonp on {0} MC".format(DATE))
         os.system('''
         readlink -f {0}/{1}/pass3/*.tlfptn.dst.gz > {0}/{1}/want_wsds.tlfptn.txt;
-        tlhbgeomnp_main.run -sd {3} -fd {2} -no_bw -f -i {0}/{1}/want_wsds.tlfptn.txt -o {0}/{1}/pass4;
+        tlhbgeomnp_main.run -sd {3} -fd {2} -no_bw -f -i {0}/{1}/want_wsds.tlfptn.txt -o {0}/{1}/pass4 >& {0}/{1}/log/pass4/{1}_tlhbgeomnp.log;
         rm -rvf {0}/{1}/want_wsds.tlfptn.txt
         '''.format(self.HYBRID_MC_PATH,DATE,self.FD_ID,self.SD_ID))
 
